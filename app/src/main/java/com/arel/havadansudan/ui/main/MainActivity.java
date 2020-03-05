@@ -1,6 +1,7 @@
 package com.arel.havadansudan.ui.main;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.arel.havadansudan.R;
+import com.arel.havadansudan.ui.detail.DetailActivitiy;
 import com.arel.havadansudan.utils.NetworkUtils;
 
 import java.io.IOException;
@@ -106,12 +109,14 @@ public class MainActivity extends AppCompatActivity {
             TextView txtFooter;
             View layout;
 
+
             ViewHolder(View v) {
                 super(v);
                 layout = v;
                 ivPicture = v.findViewById(R.id.row_icon);
                 txtHeader = v.findViewById(R.id.firstLine);
                 txtFooter = v.findViewById(R.id.secondLine);
+
             }
         }
 
@@ -151,23 +156,36 @@ public class MainActivity extends AppCompatActivity {
             //bagla.ivPicture.setImageDrawable(getDrawable(R.drawable.ic_card_visit));
             bagla.txtHeader.setText(name);
 
-            bagla.txtFooter.setText("Footer: " + name);
+            final String description="Footer: "+name;
 
-            bagla.ivPicture.setOnClickListener(new View.OnClickListener() {
+            bagla.txtFooter.setText(description);
+
+            bagla.ivPicture.setOnClickListener(new View.OnClickListener()
+            { @Override
+                 public void onClick(View v)
+                {
+                  Intent toDetail=new Intent(getApplicationContext(),DetailActivitiy.class);
+                   toDetail.putExtra("HEADER", name);
+                   toDetail.putExtra("DESCRIPTION", description);
+                   startActivity(toDetail);
+                 }
+
+            });
+
+            bagla.txtFooter.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    remove(position);
+                    add(position, "NEW");
                 }
             });
 
             bagla.txtHeader.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    add(position, "NEW");
+                    remove(position);
                 }
             });
         }
-
         // Veri kümenizin boyutunu döndürme (düzen yöneticisi tarafından çağrılır)
         @Override
         public int getItemCount() {
